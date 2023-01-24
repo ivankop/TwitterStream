@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandHandlers", "CommandH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryHandlers", "QueryHandlers\QueryHandlers.csproj", "{C8B94173-3EBF-4EEE-AC7A-5060FCB830CE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AA99C055-4887-4D60-93BE-28DEBA4CD7DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterStreamUnitTest", "TwitterStreamUnitTest\TwitterStreamUnitTest.csproj", "{20E0E49A-6CED-48D1-AAD3-0B5CC2D78481}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,10 @@ Global
 		{C8B94173-3EBF-4EEE-AC7A-5060FCB830CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8B94173-3EBF-4EEE-AC7A-5060FCB830CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8B94173-3EBF-4EEE-AC7A-5060FCB830CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20E0E49A-6CED-48D1-AAD3-0B5CC2D78481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20E0E49A-6CED-48D1-AAD3-0B5CC2D78481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20E0E49A-6CED-48D1-AAD3-0B5CC2D78481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20E0E49A-6CED-48D1-AAD3-0B5CC2D78481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +94,7 @@ Global
 		{9506ED76-1C96-464D-97A0-FBD38E8BB12D} = {9AFB94E1-68F5-40CE-8838-688FEAFDCA89}
 		{E65B00E8-5961-4F37-8F1D-E64B8759AAB5} = {C3D5743E-65C6-43BC-82F1-EC2FEE50542F}
 		{C8B94173-3EBF-4EEE-AC7A-5060FCB830CE} = {E8D77B59-4A85-4A80-BF49-37292E5895EA}
+		{20E0E49A-6CED-48D1-AAD3-0B5CC2D78481} = {AA99C055-4887-4D60-93BE-28DEBA4CD7DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7125006-5071-4466-A139-D01F4F9BE5D2}

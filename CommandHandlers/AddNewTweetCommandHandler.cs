@@ -13,6 +13,10 @@ namespace TwitterStream.CommandHandlers
         }
         public async Task Handle(Tweet tweet)
         {
+            if (tweet == null)
+            {
+                throw new ArgumentNullException(nameof(tweet));
+            }
             _repository.Add(tweet);
 
             await Task.Run(() => { });
