@@ -11,14 +11,13 @@ using TwitterStream.Interfaces.Query;
 using TwitterStream.QueryHandlers;
 using TwitterStream.Repository;
 
-Console.WriteLine("Hello, World!");
-
-
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.WriteLine("Twitter Sample Stream Reader");
 
 var serviceProvider = new ServiceCollection()
-    // for demo purpuse we use in-memory repository here
+    // for demo purpose we use in-memory repository here
     .AddSingleton<IRepository<Tweet>, InMemoryRepository>()
-    // for demo purpuse we use in-memory repository here
+    // using key-value repository to store statistic data
     .AddSingleton<IKeyValueRepository<string, int>, InMemoryKeyValueRepository<string, int>>()
     // Add commands handlers
     .AddScoped<ICommandHandler<Tweet>, AddNewTweetCommandHandler>()
@@ -26,26 +25,28 @@ var serviceProvider = new ServiceCollection()
     // Add query handlers
     .AddScoped<IQueryHandler<TotalTweetsQueryHandlerResult>, TotalTweetsQueryHandler>()
     .AddScoped<IQueryHandler<TopHashTagsQuery, TopHashTagsQueryHandlerResult>, TopHashTagsQueryHandler>()
-    //Creat service
+    //Create service
     .BuildServiceProvider();
 
 var commandDispatcher = new CommandDispatcher(serviceProvider);
 var queryDispatcher = new QueryDispatcher(serviceProvider);
 
-
 CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
 CancellationToken token = cancelTokenSource.Token;
 TwitterStreamReader twitterStreamReader = new TwitterStreamReader();
+// listening to new tweet event
 twitterStreamReader.NewTweet += TwitterStreamReader_NewTweet;
 // start reading form Twitter sample stream
 twitterStreamReader.Start(token);
 
-
+Console.WriteLine($"Press Enter to stop reader process");
 Console.ReadLine();
 
-
+// cancel reader stream
 cancelTokenSource.Cancel();
-Console.ReadLine();
+
+
+// print out results
 var totalTweetResult = queryDispatcher.Send<TotalTweetsQueryHandlerResult>();
 Console.WriteLine($"Total tweets: {totalTweetResult.Total}");
 
@@ -57,21 +58,36 @@ foreach (var tag in toptenTags.Tags)
     Console.WriteLine(tag);
 }
 
+Console.ReadLine();
+// End
+
+
+/// <summary>
+/// New tweet event handler
+/// </summary>
 void TwitterStreamReader_NewTweet(Tweet tweet)
 {
-    // Console.WriteLine(tweet.text);
-    commandDispatcher.Send(tweet);
-
-    // update statistic
-    if (tweet?.entities?.hashtags != null)
+    Task savingTask = new Task(() =>
     {
-        foreach (var hashtag in tweet.entities.hashtags)
+        // save to repository
+        commandDispatcher.Send(tweet);
+    }, token);
+    savingTask.Start();
+
+    Task updateStatisticTask = new Task(() =>
+    {
+        // update statistic
+        if (tweet?.entities?.hashtags != null)
         {
-            if (!string.IsNullOrEmpty(hashtag.tag))
+            foreach (var hashtag in tweet.entities.hashtags)
             {
-                HashTagStatisticCommandHandlerEntity entity = new HashTagStatisticCommandHandlerEntity(hashtag.tag);
-                commandDispatcher.Send(entity);
+                if (!string.IsNullOrEmpty(hashtag.tag))
+                {
+                    HashTagStatisticCommandHandlerEntity entity = new HashTagStatisticCommandHandlerEntity(hashtag.tag);
+                    commandDispatcher.Send(entity);
+                }
             }
         }
-    }
+    }, token);
+    updateStatisticTask.Start();
 }

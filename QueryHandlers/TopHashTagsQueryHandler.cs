@@ -15,6 +15,7 @@ namespace TwitterStream.QueryHandlers
         public TopHashTagsQueryHandlerResult Handle(TopHashTagsQuery query)
         {
             var repo = _repository.GetAll();
+            var tmp = repo.OrderByDescending(kv => kv.Value).Select(kv => kv).ToList();
             var tags = repo.OrderByDescending(kv => kv.Value).Select(kv => kv.Key).Take(query.Take).ToList();
             TopHashTagsQueryHandlerResult result = new TopHashTagsQueryHandlerResult(tags);
             return result;
